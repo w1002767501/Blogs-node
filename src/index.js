@@ -1,30 +1,34 @@
-const koa = require('koa')
-const path = require('path')
-const Router = require('koa-router')
-const cors = require('@koa/cors')
-const koabody = require('koa-body')
-const json = require('koa-json')
-const helmet = require('koa-helmet')
-const koastatic = require('koa-static')
+import koa from 'koa'
+import path from 'path'
+import helmet from 'koa-helmet'
+import statics from 'koa-static'
+import router from './routes/routes'
+import koaBody from 'koa-bodyparser'
+import jsonutil from 'koa-json'
+import cors from '@koa/cors'
+import compose from 'koa-compose'
+import compress from 'koa-compress'
 
 const app = new koa()
-const router = new Router()
 
-router.get('/test', ctx => {
-  ctx.body = 'hello ssss'
-})
+const isDevMode = process.env.NODE_ENV === 'production' ? false : true
 
-router.post('/testpost', async ctx => {
-  let { body } = ctx.request
-  ctx.body = {
-    ...body
-  }
-})
+/**
+ * 使用koa-compose 集成中间件
+ */
+const middleware = compose([
+  koaBody(),
+  statics(path.join(__dirname, '../public')),
+  cors(),
+  jsonutil({ pretty: false, param: 'pretty' }),
+  helmet(),
+])
 
-app.use(koabody())
-app.use(cors())
-app.use(json({ pretty: false, param: 'pretty' }))
-app.use(helmet())
-app.use(koastatic(path.join(__dirname), './public'))
-app.use(router.routes())
+if (!isDevMode) {
+  app.use(compress())
+}
+
+app.use(middleware)
+app.use(router())
+
 app.listen(9000)
