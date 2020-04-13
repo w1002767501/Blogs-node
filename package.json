@@ -19,6 +19,7 @@
   "homepage": "https://github.com/w1002767501/Blogs-node#readme",
   "dependencies": {
     "@koa/cors": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-bodyparser": "^4.3.0",
@@ -27,6 +28,7 @@
     "koa-compress": "^3.0.0",
     "koa-helmet": "^5.2.0",
     "koa-json": "^2.0.2",
+    "koa-jwt": "^3.6.0",
     "koa-router": "^8.0.8",
     "koa-static": "^5.0.0",
     "mysql-pro": "^1.0.1"
